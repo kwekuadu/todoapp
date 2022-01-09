@@ -1,0 +1,143 @@
+  {% extends '../base.html'  %}
+
+ {% block title  %}
+    Todo App
+{% endblock title  %}
+
+
+
+  {% block content  %}
+      <div class="">
+             <center>
+                <form method="POST" action="{% url 'add' %}" class="form mt-5">
+                     {% csrf_token%}
+
+                     <table  style="width : 30em;">
+                         <tr>
+                               <td>{{todoform.title}}</td>
+                              <td>&nbsp;<button type="submit" class="btn btn-sm btn-success font-weight-bold mb-2">Add Todo</button></td>
+                         </tr>
+                     </table>
+                </form>
+                  <hr/>
+                   <table class="table" style="width : 40em;">
+                       <thead>
+                          <tr> 
+                            <th>#</th>
+                             <th>Id</th>
+                             <th>Todo Title</th>
+                              <th>Action</th>
+                          </tr>
+                       </thead>
+                         <tbody>
+                          
+                             {% for todo in todolist %}
+
+                                <tr>
+                                   <td>{{ forloop.counter }}</td>
+                                   <td>{{todo.id}}</td>
+                                   <td>{{todo.title}}</td>
+                                    <td>
+                                       <a href="{}" class="btn btn-sm btn-primary font-weight-bold openEditModal" data-id="{{todo.id}}" data-title="{{todo.title}}">Edit</a>&nbsp;
+                                       <a href="" class="btn btn-sm btn-danger font-weight-bold openDeleteModal"  data-id="{{todo.id}}" data-title="{{todo.title}}">Delete</a>
+                                    </td>
+                               </tr>
+
+                             {% endfor  %}
+                          
+                         </tbody>
+                     </table>
+
+             </center>
+      </div>
+        <!-- EDIT TODO -->
+           <form method="POST" action="{% url 'update' %}"  class="form mt-5">
+                {% csrf_token%}
+
+                      <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Update Todo</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                                    <input type="hidden"  class="form-control form-control-sm edittodoid" id="" name="id" value=""/>
+
+                                      <input type="text"  class="form-control form-control-sm edittodotitle" id="" name="title" value=""/>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="submit" class="btn btn-primary">Update </button>
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+        </form>
+          <!-- DELETE TODO -->
+         <form method="POST" action="{% url 'delete' %}" class="form mt-5">
+              {% csrf_token%}
+
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete Todo</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                          Are you sure want to delete   <span class='deletetodotitle font-weight-bold'></span> ?
+                            <input type="hidden"  class="form-control form-control-sm deletetodoid" id="" name="id" value=""/>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">Delete </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+     </form>
+
+      {% endblock content  %}
+
+  {% block customscript  %}
+
+<script type="text/javascript">
+
+   $(document).ready(function(e){
+
+      $(".openEditModal").click(function(e){
+                 e.preventDefault();
+
+                 var todoid = $(this).attr("data-id");
+                 var todotitle = $(this).attr("data-title");
+
+                  $(".edittodoid").val(todoid);
+                   $(".edittodotitle").val(todotitle);
+                 
+             $("#editModal").modal("show");
+      });
+    
+       $(".openDeleteModal").click(function(e){
+                 e.preventDefault();
+
+                var todoid = $(this).attr("data-id");
+                 var todotitle = $(this).attr("data-title");
+
+                  $(".deletetodoid").val(todoid);
+                   $(".deletetodotitle").html(todotitle);
+
+             $("#deleteModal").modal("show");
+      });
+   });
+</script>
+
+    {% endblock customscript  %}
+      
+
